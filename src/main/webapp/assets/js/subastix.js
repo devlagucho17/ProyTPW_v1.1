@@ -130,6 +130,9 @@ async function loadAuctions() {
         } else {
             elements("heroTitle").textContent = "Subastas únicas en tiempo real";
             elements("heroPrice").textContent = "—";
+            elements("heroStatus").textContent = "SIN SUBASTAS";
+            elements("liveStripStatus").textContent = "SIN SUBASTA SELECCIONADA";
+            elements("detailStatus").textContent = "SIN SUBASTA";
             elements("auctionGrid").innerHTML = '<p class="text-muted">Todavía no hay subastas. Inicia sesión para publicar la primera.</p>';
         }
     } catch (error) {
@@ -207,6 +210,15 @@ async function loadCategories() {
         const categories = await api("/api/auctions/categories");
         elements("auctionCategory").innerHTML = '<option value="">Selecciona una categoría</option>'
             + categories.map(category => `<option value="${escapeHtml(category.name)}">${escapeHtml(category.name)}</option>`).join("");
+        let draft = null;
+        try {
+            draft = JSON.parse(localStorage.getItem("subastix.auctionDraft") || "null");
+        } catch (error) {
+            elements("draftStatus").textContent = "No se pudo recuperar el borrador.";
+        }
+        if (typeof draft?.auctionCategory === "string") {
+            elements("auctionCategory").value = draft.auctionCategory;
+        }
         const tabs = elements("categoryTabs");
         tabs.innerHTML = '<button class="active" data-category="Todas">Todas</button>'
             + categories.map(category => `<button data-category="${escapeHtml(category.name)}">${escapeHtml(category.name)}</button>`).join("");
@@ -250,6 +262,10 @@ let selectedAuctionId = 0;
 function renderAuctionDetails(result) {
     const auction = selectedAuction;
     elements("detailTitle").textContent = auction.title;
+    elements("detailBreadcrumbTitle").textContent = auction.title;
+    elements("detailBreadcrumbCategory").textContent = auction.category;
+    elements("liveStripStatus").textContent = auction.status === "live"
+        ? "SUBASTA EN VIVO" : auction.status === "soon" ? "SUBASTA PROGRAMADA" : "SUBASTA FINALIZADA";
     elements("detailCategory").textContent = auction.category;
     elements("detailCondition").textContent = auction.condition;
     elements("detailDescription").textContent = auction.description;
@@ -366,6 +382,8 @@ function updateCountdownDisplay() {
     const seconds = String(remainingSeconds % 60).padStart(2, "0");
     elements("detailCountdown").innerHTML = `<span><b>${hours}</b><small>HORAS</small></span><i>:</i><span><b>${minutes}</b><small>MIN</small></span><i>:</i><span><b>${seconds}</b><small>SEG</small></span>`;
     elements("heroCountdown").textContent = `${hours} : ${minutes} : ${seconds}`;
+    elements("countdownLabel").textContent = selectedAuction?.status === "soon"
+        ? "LA SUBASTA COMIENZA EN" : "LA SUBASTA TERMINA EN";
     if (remainingSeconds === 0 && selectedAuction?.status === "live") {
         selectedAuction.status = "ended";
         updateBidControls();
@@ -601,6 +619,12 @@ elements("auctionForm").addEventListener("submit", async event => {
         elements("titleCount").textContent = "0 / 80";
         elements("previewTitle").textContent = "Título de tu subasta";
         elements("previewPrice").textContent = "$0.00";
+        try {
+            localStorage.removeItem("subastix.auctionDraft");
+        } catch (error) {
+            elements("draftStatus").textContent = "Subasta publicada; no se pudo borrar el borrador local.";
+        }
+        elements("draftStatus").innerHTML = "<i></i> Sin guardar";
         updateStep(1);
         await loadAuctions();
     } catch (error) {
@@ -609,6 +633,8 @@ elements("auctionForm").addEventListener("submit", async event => {
 });
 
 async function initialize() {
+    elements("copyrightYear").textContent = String(new Date().getFullYear());
+    restoreDraft();
     try {
         const session = await api("/api/auth");
         csrfToken = session.csrfToken;
@@ -622,4 +648,35 @@ async function initialize() {
 }
 
 elements("logoutButton").classList.add("d-none");
+elements("saveDraftButton").addEventListener("click", () => {
+    const draft = Object.fromEntries([
+        "auctionTitle", "auctionCategory", "auctionCondition", "auctionDescription",
+        "startingPrice", "bidIncrementInput", "auctionStart", "auctionEnd"
+    ].map(id => [id, elements(id).value]));
+    try {
+        localStorage.setItem("subastix.auctionDraft", JSON.stringify(draft));
+        elements("draftStatus").innerHTML = "<i></i> Borrador guardado en este navegador";
+    } catch (error) {
+        elements("draftStatus").textContent = "No se pudo guardar el borrador en este navegador.";
+    }
+});
+
+function restoreDraft() {
+    try {
+        const saved = localStorage.getItem("subastix.auctionDraft");
+        if (!saved) return;
+        const draft = JSON.parse(saved);
+        ["auctionTitle", "auctionCategory", "auctionCondition", "auctionDescription",
+            "startingPrice", "bidIncrementInput", "auctionStart", "auctionEnd"].forEach(id => {
+            if (typeof draft[id] === "string") elements(id).value = draft[id];
+        });
+        elements("titleCount").textContent = `${elements("auctionTitle").value.length} / 80`;
+        elements("previewTitle").textContent = elements("auctionTitle").value || "Título de tu subasta";
+        elements("previewPrice").textContent = money(elements("startingPrice").value, 2);
+        elements("draftStatus").innerHTML = "<i></i> Borrador recuperado de este navegador";
+    } catch (error) {
+        elements("draftStatus").textContent = "No se pudo recuperar el borrador.";
+    }
+}
+
 initialize();

@@ -35,7 +35,7 @@
             <div class="header-actions">
                 <div class="dropdown">
                     <button class="icon-button" data-bs-toggle="dropdown" aria-label="Notificaciones">
-                        <i class="bi bi-bell"></i><span class="notification-dot"></span>
+                        <i class="bi bi-bell"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end notification-menu">
                         <strong>Notificaciones</strong>
@@ -70,20 +70,20 @@
         <section class="hero-section">
             <div class="hero-copy">
                 <div class="d-flex align-items-center gap-3">
-                    <span class="status-badge status-live" id="heroStatus">EN VIVO</span>
+                    <span class="status-badge status-upcoming" id="heroStatus">SIN SUBASTAS</span>
                     <span class="eyebrow text-white-50">SUBASTAS DESTACADAS</span>
                 </div>
                 <h1 id="heroTitle">Subastas únicas<br>en tiempo real</h1>
                 <p>Descubre artículos únicos y participa en subastas en tiempo real.</p>
                 <div class="hero-data">
                     <span><small>Puja actual</small><strong id="heroPrice">—</strong></span>
-                    <span><small>Finaliza en</small><strong class="digital" id="heroCountdown">00 : 12 : 48</strong></span>
+                    <span><small>Tiempo restante</small><strong class="digital" id="heroCountdown">00 : 00 : 00</strong></span>
                 </div>
                 <button class="primary-button" data-page="detalle">Pujar ahora <i class="bi bi-arrow-right"></i></button>
             </div>
             <div class="hero-photo">
-                <img src="https://images.unsplash.com/photo-1661030419605-3d4ca9cda193?auto=format&fit=crop&w=1200&q=85" alt="Rolex Datejust destacado">
-                <span class="verified-label"><i class="bi bi-patch-check"></i> Autenticidad verificada</span>
+                <img src="https://images.unsplash.com/photo-1661030419605-3d4ca9cda193?auto=format&fit=crop&w=1200&q=85" alt="Artículo destacado de subasta">
+                <span class="verified-label"><i class="bi bi-broadcast"></i> Oportunidades en vivo</span>
             </div>
         </section>
 
@@ -94,7 +94,7 @@
                     <h2>Explorar subastas</h2>
                     <p>Descubre artículos únicos seleccionados por vendedores verificados.</p>
                 </div>
-                <span id="resultCount">9 resultados</span>
+                <span id="resultCount">Cargando subastas…</span>
             </div>
 
             <div class="filter-panel">
@@ -118,8 +118,8 @@
     <!-- PANTALLA 2: DETALLE -->
     <main id="page-detalle" class="app-page">
         <div class="content-shell detail-content">
-            <nav class="breadcrumb-line"><button data-page="catalogo">Subastas</button><span>/</span><button>Relojes</button><span>/</span><b>Rolex Datejust 41</b></nav>
-            <div class="live-strip"><span><i></i> SUBASTA EN VIVO</span><small>18 personas están viendo este artículo ahora</small></div>
+            <nav class="breadcrumb-line"><button data-page="catalogo">Subastas</button><span>/</span><button id="detailBreadcrumbCategory">—</button><span>/</span><b id="detailBreadcrumbTitle">Selecciona una subasta</b></nav>
+            <div class="live-strip"><span><i></i> <span id="liveStripStatus">ESTADO DE SUBASTA</span></span><small>Las pujas se actualizan desde la base de datos</small></div>
 
             <div class="detail-layout">
                 <section>
@@ -161,32 +161,32 @@
                 </section>
 
                 <aside class="bid-panel">
-                    <div class="d-flex justify-content-between align-items-center"><span class="status-badge status-live" id="detailStatus">EN VIVO</span><small id="detailLot">—</small></div>
-                    <p class="countdown-label">LA SUBASTA TERMINA EN</p>
+                    <div class="d-flex justify-content-between align-items-center"><span class="status-badge status-upcoming" id="detailStatus">SIN SUBASTA</span><small id="detailLot">—</small></div>
+                    <p class="countdown-label" id="countdownLabel">TIEMPO RESTANTE</p>
                     <div class="large-countdown" id="detailCountdown">
                         <span><b>00</b><small>HORAS</small></span><i>:</i>
-                        <span><b>02</b><small>MIN</small></span><i>:</i>
-                        <span><b>14</b><small>SEG</small></span>
+                        <span><b>00</b><small>MIN</small></span><i>:</i>
+                        <span><b>00</b><small>SEG</small></span>
                     </div>
                     <div class="current-price">
                         <small>PRECIO ACTUAL</small>
-                        <strong id="currentPrice">$8,450.00</strong>
+                        <strong id="currentPrice">—</strong>
                         <span><i></i> <span id="leaderText">Precio actual de la subasta</span></span>
                     </div>
                     <div class="offer-box">
                         <div class="offer-title"><b>Tu oferta</b><span>Puja mínima: <strong id="minimumBid">—</strong></span></div>
-                        <div class="money-input"><span>$</span><input id="bidAmount" type="number" value="8500" min="8500" step="1"><small>USD</small></div>
+                        <div class="money-input"><span>$</span><input id="bidAmount" type="number" step="0.01"><small>USD</small></div>
                         <div class="quick-offers">
                             <button data-amount="8500">$8,500</button>
                             <button data-amount="8600">$8,600</button>
                             <button data-amount="8750">$8,750</button>
                         </div>
                         <button id="placeBidButton" class="bid-button">REALIZAR PUJA <i class="bi bi-hammer"></i></button>
-                        <small class="secure-text"><i class="bi bi-shield-check"></i> Tu puja es vinculante y está protegida</small>
+                        <small class="secure-text"><i class="bi bi-shield-check"></i> Tu oferta quedará registrada en el historial</small>
                     </div>
                     <div class="extension-alert"><i class="bi bi-info-circle"></i><p><b>Extensión automática</b>Si entra una puja en el último minuto, el tiempo se extenderá 2 minutos.</p></div>
                     <div class="bid-history">
-                        <div class="history-title"><b>Historial de pujas</b><span id="bidTotal">42 pujas</span></div>
+                        <div class="history-title"><b>Historial de pujas</b><span id="bidTotal">0 pujas</span></div>
                         <div class="history-header"><span>USUARIO</span><span>MONTO</span><span>HORA</span></div>
                         <div id="bidHistoryRows"></div>
                         <button class="full-text-button">Ver historial completo</button>
@@ -237,7 +237,7 @@
     <main id="page-publicar" class="app-page publish-page">
         <div class="content-shell publish-heading">
             <div><button data-page="cuenta" class="back-button"><i class="bi bi-arrow-left"></i> Volver a mis productos</button><h1>Publicar nueva subasta</h1><p>Completa la información para poner tu producto a subasta.</p></div>
-            <span><i></i> Borrador guardado</span>
+            <span id="draftStatus"><i></i> Sin guardar</span>
         </div>
         <div class="stepper-background">
             <div class="content-shell stepper" id="stepper">
@@ -288,12 +288,12 @@
                             <div class="col-md-6"><label for="auctionStart" class="form-label">Fecha y hora de inicio</label><input id="auctionStart" class="form-control" type="datetime-local" required></div>
                             <div class="col-md-6"><label for="auctionEnd" class="form-label">Fecha y hora de finalización</label><input id="auctionEnd" class="form-control" type="datetime-local" required></div>
                         </div>
-                        <div class="commission-box"><div><span><i class="bi bi-info-circle"></i> Comisión de servicio estimada</span><b>8% del valor final</b></div><p>Solo se cobra si el producto se vende. Los costes de procesamiento están incluidos.</p></div>
+                        <div class="commission-box"><div><span><i class="bi bi-info-circle"></i> Pagos y comisiones</span><b>No configurados</b></div><p>Esta versión registra subastas y pujas; todavía no procesa pagos ni cobra comisiones.</p></div>
                         <label class="terms-line"><input type="checkbox" required> Confirmo que la información es correcta y acepto los <a href="#">términos para vendedores</a>.</label>
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="text-button">Guardar borrador</button>
+                        <button type="button" class="text-button" id="saveDraftButton">Guardar borrador</button>
                         <div><button type="button" id="previousStep" class="secondary-button d-none">Anterior</button><button type="button" id="nextStep" class="primary-button">Continuar <i class="bi bi-arrow-right"></i></button><button type="submit" id="publishButton" class="primary-button d-none">Publicar subasta <i class="bi bi-hammer"></i></button></div>
                     </div>
                 </form>
@@ -305,7 +305,7 @@
                     <div class="preview-image" id="productPreview"><i class="bi bi-image"></i><span>La imagen principal aparecerá aquí</span></div>
                     <div class="preview-info"><span class="status-badge status-upcoming">PRÓXIMAMENTE</span><h3 id="previewTitle">Título de tu subasta</h3><small>Precio inicial</small><strong id="previewPrice">$0.00</strong></div>
                 </div>
-                <div class="seller-protection"><i class="bi bi-shield-check"></i><div><b>Protección al vendedor</b><p>Todos los pagos son verificados y retenidos hasta completar la entrega.</p><button>Más información</button></div></div>
+                <div class="seller-protection"><i class="bi bi-shield-check"></i><div><b>Actividad registrada</b><p>Las subastas y sus pujas quedan asociadas a tu cuenta.</p><button data-page="cuenta">Ver mi cuenta</button></div></div>
                 <div class="support-card"><b>¿Tienes dudas?</b><p>Nuestro equipo puede revisar tu publicación antes de activarla.</p><button>Contactar soporte <i class="bi bi-arrow-right"></i></button></div>
             </aside>
         </div>
@@ -313,8 +313,8 @@
 
     <footer>
         <button class="brand border-0 bg-transparent" data-page="catalogo"><span class="brand-mark"><i class="bi bi-hammer"></i></span><span>Subast<span>IX</span></span></button>
-        <p>© 2025 SubastIX. Compra y vende con confianza.</p>
-        <span>Pagos seguros · Vendedores verificados</span>
+        <p>© <span id="copyrightYear">2026</span> SubastIX. Compra y vende con confianza.</p>
+        <span>Subastas y pujas registradas en MySQL</span>
     </footer>
 
     <nav class="screen-switcher" aria-label="Selector de pantallas">

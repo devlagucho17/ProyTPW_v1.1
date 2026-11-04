@@ -29,8 +29,13 @@ public final class PasswordUtil {
     public static boolean verify(char[] password, String encoded) {
         if (encoded == null) return false;
         if (encoded.startsWith("$2a$") || encoded.startsWith("$2b$") || encoded.startsWith("$2y$")) {
+            if (!encoded.matches("^\\$2[aby]\\$[0-9]{2}\\$[./A-Za-z0-9]{53}$")) return false;
+            int cost = Integer.parseInt(encoded.substring(4, 6));
+            if (cost < 4 || cost > 16) return false;
             try {
-                return BCrypt.checkpw(new String(password), encoded);
+                String compatibleHash = encoded.startsWith("$2y$")
+                        ? "$2a$" + encoded.substring(4) : encoded;
+                return BCrypt.checkpw(new String(password), compatibleHash);
             } catch (IllegalArgumentException ex) {
                 return false;
             }
