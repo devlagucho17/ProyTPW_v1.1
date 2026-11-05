@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.util.Locale;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import subastix.db.AuctionRepository;
@@ -140,6 +141,7 @@ public class AuctionServlet extends HttpServlet {
         }
         if (title.isBlank() || title.length() > 80 || description.isBlank() || description.length() > 2000
                 || category.isBlank() || category.length() > 50 || condition.isBlank() || condition.length() > 40
+                || !Set.of("Nuevo", "Usado · Excelente", "Usado · Bueno").contains(condition)
                 || !validPrice(startingPrice) || !validPrice(increment)) {
             Json.error(response, HttpServletResponse.SC_BAD_REQUEST, "Revisa los datos obligatorios de la subasta.");
             return;

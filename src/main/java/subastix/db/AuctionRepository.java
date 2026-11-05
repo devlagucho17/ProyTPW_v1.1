@@ -251,7 +251,8 @@ public class AuctionRepository {
             status = "live";
         }
         Instant countdownTarget = "soon".equals(status) ? startsAt : endsAt;
-        long secondsRemaining = Math.max(0, countdownTarget.getEpochSecond() - now.getEpochSecond());
+        long secondsRemaining = "ended".equals(status)
+                ? 0 : Math.max(0, countdownTarget.getEpochSecond() - now.getEpochSecond());
         return new Auction(
                 result.getLong("id"),
                 result.getString("title"),
