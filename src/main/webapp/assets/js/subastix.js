@@ -319,7 +319,7 @@ function updateBidControls() {
         button.disabled = !selectedAuction || selectedAuction.status !== "live";
     });
     input.disabled = !selectedAuction || selectedAuction.status !== "live";
-    elements("placeBidButton").disabled = !currentUser || !selectedAuction || selectedAuction.status !== "live";
+    elements("placeBidButton").disabled = !selectedAuction || selectedAuction.status !== "live";
 }
 
 document.querySelectorAll(".quick-offers button").forEach(button => {
@@ -375,6 +375,12 @@ function renderBidHistory(bids) {
         </div>`).join("") : '<p class="text-muted small">Aún no hay pujas para esta subasta.</p>';
     elements("bidTotal").textContent = `${bids.length} pujas`;
 }
+
+document.querySelector(".favorite-button").addEventListener("click", event => {
+    const button = event.currentTarget;
+    button.classList.toggle("active");
+    button.innerHTML = `<i class="bi bi-heart${button.classList.contains("active") ? "-fill" : ""}"></i>`;
+});
 
 function updateCountdownDisplay() {
     const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, "0");
@@ -454,6 +460,7 @@ async function loadAccount() {
     try {
         const bids = await api("/api/account");
         const leading = bids.filter(bid => bid.leading).length;
+        elements("accountSidebarBidCount").textContent = String(bids.filter(bid => bid.active).length);
         elements("accountBidCount").textContent = String(bids.length);
         elements("accountLeadingCount").textContent = String(leading);
         elements("accountOutbidCount").textContent = String(bids.length - leading);

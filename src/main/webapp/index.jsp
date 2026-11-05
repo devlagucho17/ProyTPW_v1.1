@@ -201,11 +201,7 @@
         <aside class="account-sidebar">
             <div class="account-profile"><span class="avatar avatar-large" id="accountAvatar">?</span><div><b id="accountName">Mi cuenta</b><small>Cuenta SubastIX</small></div></div>
             <nav>
-                <button class="active"><i class="bi bi-hammer"></i>Pujas activas <span>4</span></button>
-                <button><i class="bi bi-trophy"></i>Subastas ganadas</button>
-                <button><i class="bi bi-box-seam"></i>Productos en venta</button>
-                <button><i class="bi bi-wallet2"></i>Billetera y saldo</button>
-                <button><i class="bi bi-gear"></i>Configuración</button>
+                <button class="active"><i class="bi bi-hammer"></i>Mis pujas <span id="accountSidebarBidCount">0</span></button>
             </nav>
             <div class="help-card"><i class="bi bi-shield-check"></i><b>¿Necesitas ayuda?</b><p>Nuestro equipo está disponible para ayudarte.</p><button>Centro de ayuda <i class="bi bi-arrow-right"></i></button></div>
         </aside>
@@ -221,7 +217,7 @@
                 <article><span class="summary-icon green-bg"><i class="bi bi-arrow-up-right"></i></span><div><small>PUJAS SUPERADAS</small><strong id="accountOutbidCount">0</strong><p>Comprueba el estado antes de pujar</p></div></article>
             </div>
             <div class="account-table-card">
-                <div class="table-card-heading"><div><h2>Pujas activas</h2><p>Subastas en las que estás participando actualmente.</p></div><button>Ver todas <i class="bi bi-arrow-right"></i></button></div>
+                <div class="table-card-heading"><div><h2>Historial de pujas</h2><p>Subastas en las que has participado.</p></div></div>
                 <div class="table-responsive">
                     <table class="table align-middle mb-0 auction-table">
                         <thead><tr><th>PRODUCTO</th><th>MI OFERTA</th><th>OFERTA ACTUAL</th><th>ESTADO</th><th>TIEMPO RESTANTE</th><th></th></tr></thead>
@@ -314,7 +310,7 @@
     <footer>
         <button class="brand border-0 bg-transparent" data-page="catalogo"><span class="brand-mark"><i class="bi bi-hammer"></i></span><span>Subast<span>IX</span></span></button>
         <p>© <span id="copyrightYear">2026</span> SubastIX. Compra y vende con confianza.</p>
-        <span>Subastas y pujas registradas en MySQL</span>
+        <span>Subastas y pujas registradas</span>
     </footer>
 
     <nav class="screen-switcher" aria-label="Selector de pantallas">

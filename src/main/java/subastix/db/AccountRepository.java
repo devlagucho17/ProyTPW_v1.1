@@ -26,7 +26,9 @@ public class AccountRepository {
                 SELECT s.id_subasta AS id, p.titulo AS title, s.precio_actual AS current_price,
                        s.fecha_fin AS ends_at, p.imagen_url AS image_url,
                        MAX(my_bid.monto) AS my_bid,
-                       CASE WHEN MAX(my_bid.monto) = s.precio_actual THEN 1 ELSE 0 END AS leading
+                       CASE WHEN MAX(my_bid.monto) = s.precio_actual THEN 1 ELSE 0 END AS leading,
+                       CASE WHEN s.estado NOT IN ('FINALIZADA', 'CANCELADA')
+                                 AND s.fecha_fin > CURRENT_TIMESTAMP THEN 1 ELSE 0 END AS active
                 FROM pujas my_bid
                 JOIN subastas s ON s.id_subasta = my_bid.id_subasta
                 JOIN productos p ON p.id_producto = s.id_producto
@@ -43,7 +45,8 @@ public class AccountRepository {
                     bids.add(new AccountBid(results.getLong("id"), results.getString("title"),
                             results.getBigDecimal("my_bid"), results.getBigDecimal("current_price"),
                             results.getTimestamp("ends_at").toInstant().toString(),
-                            results.getString("image_url"), results.getBoolean("leading")));
+                            results.getString("image_url"), results.getBoolean("leading"),
+                            results.getBoolean("active")));
                 }
                 return bids;
             }
@@ -51,6 +54,6 @@ public class AccountRepository {
     }
 
     public record AccountBid(long auctionId, String title, BigDecimal myBid, BigDecimal currentPrice,
-                             String endsAt, String imageUrl, boolean leading) {
+                             String endsAt, String imageUrl, boolean leading, boolean active) {
     }
 }
